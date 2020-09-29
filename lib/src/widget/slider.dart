@@ -22,7 +22,6 @@ class SliderStyle {
   final Color accent;
   final Color variant;
   final LightSource lightSource;
-
   final NeumorphicBorder border;
   final NeumorphicBorder thumbBorder;
 
@@ -107,6 +106,7 @@ class NeumorphicSlider extends StatefulWidget {
   final double value;
   final double max;
   final double height;
+  final double sliderHeight;
   final NeumorphicSliderListener onChanged;
   final NeumorphicSliderListener onChangeStart;
   final NeumorphicSliderListener onChangeEnd;
@@ -124,6 +124,7 @@ class NeumorphicSlider extends StatefulWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.thumb,
+    this.sliderHeight,
   });
 
   double get percent => (((value.clamp(min, max)) - min) / ((max - min)));
@@ -165,7 +166,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
   }
 
   Widget _widget(BuildContext context) {
-    double thumbSize = widget.height * 1.5;
+    double thumbSize = 30;
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
@@ -178,7 +179,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
                 //because left = -1 & right = 1, so the "width" = 2, and minValue = 1
                 (widget.percent * 2) - 1,
                 0),
-            child: _generateThumb(context, thumbSize))
+            child: widget.thumb ?? _generateThumb(context, thumbSize))
       ],
     );
   }
@@ -188,7 +189,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
     return NeumorphicProgress(
       duration: Duration.zero,
       percent: widget.percent,
-      height: widget.height,
+      height: widget.sliderHeight ?? widget.height,
       style: ProgressStyle(
         disableDepth: widget.style.disableDepth,
         depth: widget.style.depth,
