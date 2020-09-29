@@ -21,6 +21,7 @@ class SliderStyle {
   final BorderRadius borderRadius;
   final Color accent;
   final Color variant;
+  final Color inActiveColor;
   final LightSource lightSource;
   final NeumorphicBorder border;
   final NeumorphicBorder thumbBorder;
@@ -34,6 +35,7 @@ class SliderStyle {
     this.variant,
     this.border = const NeumorphicBorder.none(),
     this.thumbBorder = const NeumorphicBorder.none(),
+    this.inActiveColor,
   });
 
   @override
@@ -198,6 +200,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
         borderRadius: widget.style.borderRadius,
         accent: widget.style.accent ?? theme.accentColor,
         variant: widget.style.variant ?? theme.variantColor,
+        inActiveColor: widget.style.inActiveColor
       ),
     );
   }

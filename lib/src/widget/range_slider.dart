@@ -23,6 +23,7 @@ class RangeSliderStyle {
   final BorderRadius borderRadius;
   final Color accent;
   final Color variant;
+  final Color inActiveColor;
   final LightSource lightSource;
 
   final NeumorphicBorder border;
@@ -37,6 +38,7 @@ class RangeSliderStyle {
     this.variant,
     this.border = const NeumorphicBorder.none(),
     this.thumbBorder = const NeumorphicBorder.none(),
+    this.inActiveColor,
   });
 
   @override
@@ -270,6 +272,7 @@ class _NeumorphicRangeSliderState extends State<NeumorphicRangeSlider> {
             borderRadius: widget.style.borderRadius,
             accent: widget.style.accent ?? theme.accentColor,
             variant: widget.style.variant ?? theme.variantColor,
+            inActiveColor: widget.style.inActiveColor,
           )),
       new Positioned.fill(
         child: new LayoutBuilder(

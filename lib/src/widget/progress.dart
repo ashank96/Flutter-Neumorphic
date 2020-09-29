@@ -20,6 +20,7 @@ class ProgressStyle {
   final BorderRadius gradientBorderRadius;
   final Color accent;
   final Color variant;
+  final Color inActiveColor;
   final LightSource lightSource;
 
   final AlignmentGeometry progressGradientStart;
@@ -39,6 +40,7 @@ class ProgressStyle {
     this.progressGradientEnd,
     this.variant,
     this.border = const NeumorphicBorder.none(),
+    this.inActiveColor,
   });
 
   @override
@@ -175,6 +177,7 @@ class _NeumorphicProgressState extends State<NeumorphicProgress>
             disableDepth: widget.style.disableDepth,
             border: widget.style.border,
             depth: widget.style.depth,
+            color: widget.style.inActiveColor,
             shape: NeumorphicShape.flat,
           ),
           child: AnimatedBuilder(
