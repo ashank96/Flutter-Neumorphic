@@ -19,22 +19,24 @@ class SliderStyle {
   final double depth;
   final bool disableDepth;
   final BorderRadius borderRadius;
-  final Color accent;
-  final Color variant;
-  final LightSource lightSource;
+  final Color? accent;
+  final Color? variant;
+  final LightSource? lightSource;
+  final Color? inActiveColor;
 
   final NeumorphicBorder border;
   final NeumorphicBorder thumbBorder;
 
   const SliderStyle({
-    this.depth,
-    this.disableDepth,
+    this.depth = 0,
+    this.disableDepth = false,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.accent,
     this.lightSource,
     this.variant,
     this.border = const NeumorphicBorder.none(),
     this.thumbBorder = const NeumorphicBorder.none(),
+    this.inActiveColor,
   });
 
   @override
@@ -107,14 +109,15 @@ class NeumorphicSlider extends StatefulWidget {
   final double value;
   final double max;
   final double height;
-  final NeumorphicSliderListener onChanged;
-  final NeumorphicSliderListener onChangeStart;
-  final NeumorphicSliderListener onChangeEnd;
+  final NeumorphicSliderListener? onChanged;
+  final NeumorphicSliderListener? onChangeStart;
+  final NeumorphicSliderListener? onChangeEnd;
 
-  final Widget thumb;
+  final Widget? thumb;
+  final double? sliderHeight;
 
   NeumorphicSlider({
-    Key key,
+    Key? key,
     this.style = const SliderStyle(),
     this.min = 0,
     this.value = 0,
@@ -124,6 +127,7 @@ class NeumorphicSlider extends StatefulWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.thumb,
+    this.sliderHeight,
   });
 
   double get percent => (((value.clamp(min, max)) - min) / ((max - min)));
@@ -138,25 +142,24 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
     return LayoutBuilder(builder: (context, constraints) {
       return GestureDetector(
         onPanUpdate: (DragUpdateDetails details) {
-          final RenderBox box = context.findRenderObject();
-          final tapPos = box.globalToLocal(details.globalPosition);
+          final tapPos = details.localPosition;
           final newPercent = tapPos.dx / constraints.maxWidth;
           final newValue =
               ((widget.min + (widget.max - widget.min) * newPercent))
                   .clamp(widget.min, widget.max);
 
           if (widget.onChanged != null) {
-            widget.onChanged(newValue);
+            widget.onChanged!(newValue);
           }
         },
         onPanStart: (DragStartDetails details) {
           if (widget.onChangeStart != null) {
-            widget.onChangeStart(widget.value);
+            widget.onChangeStart!(widget.value);
           }
         },
         onPanEnd: (details) {
           if (widget.onChangeEnd != null) {
-            widget.onChangeEnd(widget.value);
+            widget.onChangeEnd!(widget.value);
           }
         },
         child: _widget(context),
@@ -165,7 +168,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
   }
 
   Widget _widget(BuildContext context) {
-    double thumbSize = widget.height * 1.5;
+    double thumbSize = 30;
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
@@ -178,7 +181,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
                 //because left = -1 & right = 1, so the "width" = 2, and minValue = 1
                 (widget.percent * 2) - 1,
                 0),
-            child: _generateThumb(context, thumbSize))
+            child: widget.thumb ?? _generateThumb(context, thumbSize))
       ],
     );
   }
@@ -188,7 +191,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
     return NeumorphicProgress(
       duration: Duration.zero,
       percent: widget.percent,
-      height: widget.height,
+      height: widget.sliderHeight ?? widget.height,
       style: ProgressStyle(
         disableDepth: widget.style.disableDepth,
         depth: widget.style.depth,
@@ -197,6 +200,7 @@ class _NeumorphicSliderState extends State<NeumorphicSlider> {
         borderRadius: widget.style.borderRadius,
         accent: widget.style.accent ?? theme.accentColor,
         variant: widget.style.variant ?? theme.variantColor,
+        inActiveColor: widget.style.inActiveColor
       ),
     );
   }
